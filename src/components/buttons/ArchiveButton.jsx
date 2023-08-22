@@ -5,8 +5,8 @@ import { FaArchive } from "react-icons/fa";
 
 function ArchiveButton({ onArchive }) {
   return (
-    <Link className={`action`} onClick={onArchive} to={"/"}>
-      <FaArchive className={`action`} />
+    <Link className="action" onClick={onArchive} to="/">
+      <FaArchive className="action" />
     </Link>
   );
 }

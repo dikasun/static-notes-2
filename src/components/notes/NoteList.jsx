@@ -1,12 +1,17 @@
 import React from "react";
-import { showFormattedDate } from "../utils/index.js";
+import { showFormattedDate } from "../../utils/index.js";
 import NoteItem from "./NoteItem.jsx";
 import PropTypes from "prop-types";
+import LocalizationValue from "../../utils/localization.js";
 
 function NoteList({ notes, isArchive }) {
   return notes.length === 0 ? (
     <div className="notes-list-empty">
-      <p>{isArchive ? "Archives is empty" : "Notes is Empty"}</p>
+      <p>
+        {isArchive
+          ? LocalizationValue({ id: "Arsip kosong", en: "Archives is empty" })
+          : LocalizationValue({ id: "Catatan kosong", en: "Notes is empty" })}
+      </p>
     </div>
   ) : (
     <div className="notes-list">
@@ -15,7 +20,10 @@ function NoteList({ notes, isArchive }) {
           key={note.id}
           id={note.id}
           title={note.title}
-          date={showFormattedDate(note.createdAt)}
+          date={showFormattedDate(
+            LocalizationValue({ id: "id-ID", en: "en-EN" }),
+            note.createdAt,
+          )}
           body={note.body}
         />
       ))}

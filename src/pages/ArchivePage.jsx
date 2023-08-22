@@ -1,16 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { getArchivedNotes } from "../utils/local-data.js";
-import SearchBar from "../components/SearchBar.jsx";
-import NoteList from "../components/NoteList.jsx";
+import React, { useContext, useEffect, useState } from "react";
+import SearchBar from "../components/notes/SearchBar.jsx";
+import NoteList from "../components/notes/NoteList.jsx";
 import { useSearchParams } from "react-router-dom";
+import { getArchivedNotes } from "../utils/network-data.js";
+import LocalizationValue from "../utils/localization.js";
+import LoadingContext from "../context/LoadingContext.js";
 
 export default function ArchivePage() {
-  const [notes] = useState(getArchivedNotes());
+  const [notes, setNotes] = useState([]);
   const [searchNotes, setSearchNotes] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [keyword, setKeyword] = useState(searchParams.get("key") || "");
+  const { toggleLoading } = useContext(LoadingContext);
 
   useEffect(() => {
+    getArchivedNotes()
+      .then((res) => {
+        toggleLoading();
+        !res.error && setNotes(res.data);
+      })
+      .finally(() => toggleLoading());
+
     keyword !== "" &&
       setSearchNotes(
         keyword
@@ -23,7 +33,7 @@ export default function ArchivePage() {
 
   return (
     <>
-      <h2>Notes</h2>
+      <h2>{LocalizationValue({ id: "Arsip", en: "Archives" })}</h2>
       <SearchBar
         keyword={keyword}
         onSearch={(key) => {

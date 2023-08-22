@@ -1,19 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Navigation from "./navs/Navigation.jsx";
+import PropTypes from "prop-types";
 
-export default function Header() {
+function Header({ authUser }) {
   return (
     <header>
       <h1>
         <Link to={"/"}>Static Notes</Link>
       </h1>
-      <nav className={`navigation`}>
-        <ul>
-          <li>
-            <Link to={"/archives"}>Archives</Link>
-          </li>
-        </ul>
-      </nav>
+      <Navigation authUser={authUser} onLogout={() => {}} />
     </header>
   );
 }
+
+Header.propTypes = {
+  authUser: PropTypes.object.isRequired,
+};
+
+export default Header;

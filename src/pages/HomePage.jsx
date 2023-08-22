@@ -1,17 +1,27 @@
-import SearchBar from "../components/SearchBar.jsx";
-import NoteList from "../components/NoteList.jsx";
-import React, { useEffect, useState } from "react";
-import { getActiveNotes } from "../utils/local-data.js";
+import SearchBar from "../components/notes/SearchBar.jsx";
+import NoteList from "../components/notes/NoteList.jsx";
+import React, { useContext, useEffect, useState } from "react";
 import AddButton from "../components/buttons/AddButton.jsx";
 import { useSearchParams } from "react-router-dom";
+import { getActiveNotes } from "../utils/network-data.js";
+import LocalizationValue from "../utils/localization.js";
+import LoadingContext from "../context/LoadingContext.js";
 
 export default function HomePage() {
-  const [notes] = useState(getActiveNotes());
+  const [notes, setNotes] = useState([]);
   const [searchNotes, setSearchNotes] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [keyword, setKeyword] = useState(searchParams.get("key") || "");
+  const { toggleLoading } = useContext(LoadingContext);
 
   useEffect(() => {
+    getActiveNotes()
+      .then((res) => {
+        toggleLoading();
+        !res.error && setNotes(res.data);
+      })
+      .finally(() => toggleLoading());
+
     keyword !== "" &&
       setSearchNotes(
         keyword
@@ -24,7 +34,7 @@ export default function HomePage() {
 
   return (
     <>
-      <h2>Notes</h2>
+      <h2>{LocalizationValue({ id: "Catatan", en: "Notes" })}</h2>
       <SearchBar
         keyword={keyword}
         onSearch={(key) => {

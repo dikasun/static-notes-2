@@ -14,7 +14,7 @@ function ThemeNav({ theme, toggleTheme }) {
 }
 
 ThemeNav.propTypes = {
-  theme: PropTypes.string.isRequired,
+  theme: PropTypes.string,
   toggleTheme: PropTypes.func.isRequired,
 };
 

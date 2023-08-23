@@ -7,14 +7,16 @@ import AddNotePage from "./pages/AddNotePage.jsx";
 import ArchivePage from "./pages/ArchivePage.jsx";
 import LoginPage from "./pages/auth/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage.jsx";
-import { getUserLogged } from "./utils/network-data.js";
+import { getUserLogged, putAccessToken } from "./utils/network-data.js";
 import { LocaleProvider, LocaleType } from "./context/LocaleContext.js";
 import { ThemeProvider, ThemeType } from "./context/ThemeContext.js";
 import { LoadingProvider } from "./context/LoadingContext.js";
 
 function App() {
   const [authUser, setAuthUser] = useState(null);
-  const [theme, setTheme] = useState(ThemeType.DARK);
+  const [theme, setTheme] = useState(
+    localStorage.getItem("theme") || ThemeType.DARK,
+  );
   const [locale, setLocale] = useState(LocaleType.ID);
   const [loading, setLoading] = useState(false);
 
@@ -65,6 +67,7 @@ function App() {
       toggleLoading();
     });
     setTheme(localStorage.getItem("theme"));
+    window.document.documentElement.setAttribute("data-theme", theme);
     setLocale(localStorage.getItem("locale"));
   }, []);
 
@@ -73,7 +76,13 @@ function App() {
       <ThemeProvider value={themeContextValue}>
         <LocaleProvider value={localeContextValue}>
           <div className="app-container">
-            <Header authUser={authUser} />
+            <Header
+              authUser={authUser}
+              onLogout={() => {
+                setAuthUser(null);
+                putAccessToken("");
+              }}
+            />
             <main>
               {loading ? (
                 <p>Loading....</p>

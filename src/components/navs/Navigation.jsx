@@ -26,7 +26,7 @@ function Navigation({ authUser, onLogout }) {
 }
 
 Navigation.propTypes = {
-  authUser: PropTypes.object.isRequired,
+  authUser: PropTypes.object,
   onLogout: PropTypes.func.isRequired,
 };
 
